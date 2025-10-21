@@ -6,7 +6,6 @@ import shutil
 
 
 lsoutput = input()
-currentDirectory = input()
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
