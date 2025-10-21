@@ -9,8 +9,11 @@ if [[ "$buffer" == "y" ]] ; then
     DIRECTORY=$(pwd)
 else
     echo "Enter The Directory for Sorting :: "
-    read "$DIRECTORY"
+    read D
+    DIRECTORY=D
 fi
 
 LSOUTPUT=$(ls -1 "$DIRECTORY" 2>/dev/null | tr '\n' ' ')
-echo "$LSOUTPUT" | python main.py
+json=$(echo "$LSOUTPUT" | python ../src/main.py)
+echo "File Structure is as Follows :: "
+echo "$json"

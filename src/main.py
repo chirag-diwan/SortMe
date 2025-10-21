@@ -9,7 +9,7 @@ lsoutput = input()
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key="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",
+    api_key="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",
 )
 
 completion = client.chat.completions.create(
@@ -32,30 +32,29 @@ cleaned = re.sub(r"^```json\s*|```$", "", rawData, flags=re.MULTILINE).strip()
 # Parse string into dict
 data = json.loads(cleaned)
 
-def jsonDFS(data , rootPath):
-    if isinstance(data , dict):
-        for key,value in data:
-            folder_path = rootPath + "/" + key
-            if isinstance(value , (dict , list)):
-                try:
-                    os.mkdir(folder_path)
-                except Exception as e:
-                    print("Error :: " , {e})
-                    jsonDFS(value , folder_path)
-            else:
-                try:
-                    os.mkdir(folder_path)
-                except Exception as e:
-                    print("Error :: " , {e})
-                shutil.move(os.path.abspath(value) , folder_path + value)
 
-    elif isinstance(data , list):
-        for i , item in enumerate(data):
-            if isinstance(item , (dict , list)):
-                jsonDFS(item , rootPath)
-            else:
-                shutil.move(os.path.abspath(item) , rootPath + item)
+def jsonDFS(Data , rootFolder):
+    files = Data.get('files' , [])
+    for file in files:
+        src_path = os.path.join(os.getcwd() , file)
+        dest_path = rootFolder
+        shutil.move(src_path , dest_path)
+
+    for key , value in Data.items():
+        keyFolder = os.path.join(rootFolder , key)
+        if key == "files":
+            continue
+
+        try:
+            os.makedirs(keyFolder , exist_ok=True)
+        except Exception as e:
+            print(e)
+
+        if isinstance(value , dict):
+            jsonDFS(value , keyFolder)
+
 
 
 jsonData = json.dumps(data , indent=4)
-jsonDFS(jsonData , os.getenv("CURRENTDIRECTORY"))
+print(jsonData)
+jsonDFS(data , os.getcwd())
