@@ -1,12 +1,16 @@
 from openai import OpenAI
 import re
 import json
+import os
+import shutil
+
 
 lsoutput = input()
+currentDirectory = input()
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key="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",
+    api_key="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",
 )
 
 completion = client.chat.completions.create(
@@ -29,4 +33,30 @@ cleaned = re.sub(r"^```json\s*|```$", "", rawData, flags=re.MULTILINE).strip()
 # Parse string into dict
 data = json.loads(cleaned)
 
-print (json.dumps(data , indent=4))
+def jsonDFS(data , rootPath):
+    if isinstance(data , dict):
+        for key,value in data:
+            folder_path = rootPath + "/" + key
+            if isinstance(value , (dict , list)):
+                try:
+                    os.mkdir(folder_path)
+                except Exception as e:
+                    print("Error :: " , {e})
+                    jsonDFS(value , folder_path)
+            else:
+                try:
+                    os.mkdir(folder_path)
+                except Exception as e:
+                    print("Error :: " , {e})
+                shutil.move(os.path.abspath(value) , folder_path + value)
+
+    elif isinstance(data , list):
+        for i , item in enumerate(data):
+            if isinstance(item , (dict , list)):
+                jsonDFS(item , rootPath)
+            else:
+                shutil.move(os.path.abspath(item) , rootPath + item)
+
+
+jsonData = json.dumps(data , indent=4)
+jsonDFS(jsonData , os.getenv("CURRENTDIRECTORY"))

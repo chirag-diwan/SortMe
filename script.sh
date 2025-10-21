@@ -3,6 +3,8 @@ echo "Sort This Directory ? "
 read buffer
 DIRECTORY="$HOME"
 
+export CURRENTDIRECTORY="$(pwd)"
+
 if [[ "$buffer" == "y" ]] ; then
     DIRECTORY=$(pwd)
 else
@@ -11,6 +13,4 @@ else
 fi
 
 LSOUTPUT=$(ls -1 "$DIRECTORY" 2>/dev/null | tr '\n' ' ')
-JSONOUTPUT=$(echo "$LSOUTPUT" | python main.py)
-echo "$JSONOUTPUT"
-echo "$JSONOUTPUT" | jq -r '.read.files[]'
+echo "$LSOUTPUT" | python main.py
