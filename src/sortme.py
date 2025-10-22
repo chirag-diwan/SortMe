@@ -13,9 +13,8 @@ wrkDir = os.getcwd()
 if(len(sys.argv) == 1):
     print("Please Provide a valid OpenAI AIP Key")
     sys.exit()
-
-if(len(sys.argv) != 2):
-    wrkDir = sys.argv[2]
+elif(len(sys.argv) == 3):
+    wrkDir = sys.argv[3]
     
 lsoutput = os.listdir(wrkDir)
 
