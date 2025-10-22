@@ -48,8 +48,11 @@ chmod +x script.sh
 
 ```bash
 sortme.py arg1 arg2
+
 ```
-The command takes in two argument .The first argument is a COMPULSORY argument that takes the OPENAI Api Key and the second argument is a OPTIONAL remote directory that you may want to sort 
+
+The command takes in two argument .The first argument is a ONE TIME COMPULSORY argument that takes the OPENAI Api Key and the second argument is a OPTIONAL remote directory that you may want to sort 
+
 
 ## Contribution
 
