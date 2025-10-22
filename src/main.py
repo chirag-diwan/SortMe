@@ -6,16 +6,13 @@ import json
 import os
 import shutil
 from editFiles import changeIncludes
+import sys
 
 
-ans = input("Sort this directory?(y/n) :: ")
-ans = ans.lower()
-wrkDir : str
-if(ans == "y"):
-    wrkDir = os.getcwd()
-else :
-    wrkDir = input("Specify the directory :: ")
-
+wrkDir = os.getcwd()
+if(len(sys.argv) != 1):
+    wrkDir = sys.argv[1]
+    
 lsoutput = os.listdir(wrkDir)
 
 client = OpenAI(
