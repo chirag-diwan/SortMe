@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from openai import OpenAI
 import re
 import json
@@ -5,7 +7,16 @@ import os
 import shutil
 from editFiles import changeIncludes
 
-lsoutput = input()
+
+ans = input("Sort this directory?(y/n) :: ")
+ans = ans.lower()
+wrkDir : str
+if(ans == "y"):
+    wrkDir = os.getcwd()
+else :
+    wrkDir = input("Specify the directory :: ")
+
+lsoutput = os.listdir(wrkDir)
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
