@@ -109,7 +109,6 @@ def replaceLinesWithWord(newline : str , targetWord  : str , filePath) -> list[s
     filename , extension = os.path.splitext(filePath)
     with open(filePath , "r" , errors='ignore') as f:
             for line in f:
-                print(line)
                 if targetWord in line:
                         lines.append(newline + "\n")
                 else:
@@ -126,13 +125,13 @@ def changeIncludes():
     for currentPath, dirs, files in os.walk(os.getcwd()):
         for file in files:
             all_files.append(os.path.join(currentPath, file))
-    print(name_path)
 
     for filePath in all_files:
         with open(filePath , "r") as file:
             n , ext = os.path.splitext(filePath)
             for line in file:
-                if data[ext] in line: #data[ext] is a import keyword
+                if data[ext] in line: 
+                    #data[ext] is a import keyword
 #                    regex = regexPatterns[ext]
 
                     regex = regexPatterns[ext] if ext in regexPatterns else "Unsupported file"

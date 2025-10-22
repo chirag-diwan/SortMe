@@ -14,7 +14,7 @@ if(len(sys.argv) == 1):
     print("Please Provide a valid OpenAI AIP Key")
     sys.exit()
 elif(len(sys.argv) == 3):
-    wrkDir = sys.argv[3]
+    wrkDir = sys.argv[2]
     
 lsoutput = os.listdir(wrkDir)
 
@@ -67,7 +67,6 @@ def jsonDFS(Data , rootFolder):
 
 
 jsonData = json.dumps(data , indent=4)
-print(jsonData)
 jsonDFS(data , os.getcwd())
-
 changeIncludes()
+print(jsonData)
