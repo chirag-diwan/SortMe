@@ -10,14 +10,18 @@ import sys
 
 
 wrkDir = os.getcwd()
-if(len(sys.argv) != 1):
-    wrkDir = sys.argv[1]
+if(len(sys.argv) == 1):
+    print("Please Provide a valid OpenAI AIP Key")
+    sys.exit()
+
+if(len(sys.argv) != 2):
+    wrkDir = sys.argv[2]
     
 lsoutput = os.listdir(wrkDir)
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key="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",
+    api_key=sys.argv[1],
 )
 
 completion = client.chat.completions.create(

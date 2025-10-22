@@ -49,4 +49,4 @@ fi
 # --- Normal execution (after first-time setup) ---
 echo "[INFO] Running $SCRIPT_NAME..."
 
-python3 "$INSTALL_DIR/main.py" "$@"
+python3 "$INSTALL_DIR/sortme.py" "$@"
