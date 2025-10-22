@@ -8,19 +8,31 @@ import shutil
 from editFiles import changeIncludes
 import sys
 
-
+KEY : str = ""
 wrkDir = os.getcwd()
-if(len(sys.argv) == 1):
-    print("Please Provide a valid OpenAI AIP Key")
-    sys.exit()
-elif(len(sys.argv) == 3):
-    wrkDir = sys.argv[2]
+keyFilePath = os.path.join(os.getcwd() , ".." , "data/APIKEY.txt")
+
+
+if os.path.exists(keyFilePath):
+    with open(keyFilePath , "r") as f:
+        for line in f :
+            if (line != "" or " "):
+                key=line
+else:
+    if(len(sys.argv) == 1):
+        print("Please Provide a valid OpenAI AIP Key")
+        sys.exit()
+    elif(len(sys.argv) == 3):
+        wrkDir = sys.argv[2]
+    KEY=sys.argv[1]
+    with open(keyFilePath , "w") as f:
+        f.write(KEY)
+
     
 lsoutput = os.listdir(wrkDir)
-
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key=sys.argv[1],
+    api_key=KEY,
 )
 
 completion = client.chat.completions.create(
