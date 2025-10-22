@@ -148,4 +148,3 @@ def changeIncludes():
                             with open(filePath , "a" , errors='ignore') as f:
                                 for line in newFileContent:
                                     f.write(line)
-changeIncludes()
