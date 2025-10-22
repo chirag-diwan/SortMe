@@ -3,7 +3,7 @@ import re
 import json
 import os
 import shutil
-
+from editFiles import changeIncludes
 
 lsoutput = input()
 
@@ -58,3 +58,5 @@ def jsonDFS(Data , rootFolder):
 jsonData = json.dumps(data , indent=4)
 print(jsonData)
 jsonDFS(data , os.getcwd())
+
+changeIncludes()
