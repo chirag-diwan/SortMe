@@ -1,43 +1,4 @@
-import os , re
-
-data = {
-    ".c": "#include",
-    ".cpp": "#include",
-    ".h": "#include",
-    ".hpp": "#include",
-    ".py": "import",
-    ".js": "import",
-    ".ts": "import",
-    ".java": "import",
-    ".go": "import",
-    ".rs": "use",
-    ".php": "include",
-    ".cs": "using",
-    ".sh": "source",
-    ".md": "include",
-    ".sql": "source",
-}
-
-
-regexPatterns = {
-    ".c":    r'#include\s*[<"]([^>"]+)[>"]',                # captures what's inside quotes or <>
-    ".cpp":  r'#include\s*[<"]([^>"]+)[>"]',
-    ".h":    r'#include\s*[<"]([^>"]+)[>"]',
-    ".hpp":  r'#include\s*[<"]([^>"]+)[>"]',
-    ".py":   r'^\s*(?:from\s+([\w\.]+)\s+import|import\s+([\w\.]+))',  # group(1) or group(2)
-    ".js":   r'^\s*(?:import\s+(?:[\w\{\}\*\s,]+\s+from\s+)?["\']([^"\']+)["\']|require\(["\']([^"\']+)["\']\))',
-    ".ts":   r'^\s*(?:import\s+(?:[\w\{\}\*\s,]+\s+from\s+)?["\']([^"\']+)["\']|require\(["\']([^"\']+)["\']\))',
-    ".java": r'^\s*import\s+([\w\.]+);',
-    ".go":   r'^\s*(?:"([^"]+)"|import\s*\(\s*((?:"[^"]+"\s*)+)\s*\))',  # capture single import or list of imports
-    ".rs":   r'^\s*(?:use\s+([\w\:]+)|mod\s+([\w_]+))',
-    ".php":  r'^\s*(?:use\s+([\w\\]+)|require(?:_once)?\s*\(?["\']([^"\']+)["\']\)?|include(?:_once)?\s*\(?["\']([^"\']+)["\']\)?)',
-    ".cs":   r'^\s*using\s+([\w\.]+);',
-    ".sh":   r'^\s*(?:source|\.)\s+([^\s]+)',
-    ".md":   r'\{\{\s*include\s+["\'](.*?)["\']\s*\}\}',      # capture included filename
-    ".sql":  r'^\s*(?:\\i\s+|source\s+)([^\s;]+)',
-}
-
-
+import os
 
 
 def generate_include(file_path: str) -> str:
@@ -83,26 +44,8 @@ def generate_include(file_path: str) -> str:
     elif ext == '.cs':
         return f'using {module_path};'
 
-    return f'// Unsupported or unknown file type: {ext}'
+    return ""
 
-
-def getNameToPath() -> dict[str , str]:
-    namePath : dict [str , str] = {}
-    for currentPath, dirs, files in os.walk(os.getcwd()):
-        for file in files:
-            filePath = os.path.join(currentPath , file)
-            #file == name 
-            _bufName , _bufExt = os.path.splitext(file)
-            namePath[_bufName] = filePath
-    return namePath
-
-    
-
-def getFileNameList(Files : list) -> list[str]:
-    name : list = []
-    for file in Files:
-        name.append(file)
-    return name
 
 def replaceLinesWithWord(newline : str , targetWord  : str , filePath) -> list[str]:
     lines : list = []
@@ -119,31 +62,32 @@ def replaceLinesWithWord(newline : str , targetWord  : str , filePath) -> list[s
 
 
 def changeIncludes():
-    name_path : dict = getNameToPath()
     all_files : list[str] = []
 
     for currentPath, dirs, files in os.walk(os.getcwd()):
         for file in files:
             all_files.append(os.path.join(currentPath, file))
 
-    for filePath in all_files:
-        with open(filePath , "r") as file:
-            n , ext = os.path.splitext(filePath)
-            for line in file:
-                if data[ext] in line: 
-                    #data[ext] is a import keyword
-#                    regex = regexPatterns[ext]
+    oldFilePaths : dict = {}
+    with open("../data/OLDFILEPATH.txt" , "r" , errors='ignore') as f:
+        for line in f:
+            fileName , fileOldPath = line.split(":")
+            oldFilePaths[fileName] = fileOldPath
 
-                    regex = regexPatterns[ext] if ext in regexPatterns else "Unsupported file"
+    print(oldFilePaths)
 
-                    match = re.match(regex ,line)
-                    if match:
-                        input_name = match.group(1) or match.group(2)
-                        if input_name in name_path.keys():
-                            newDir = name_path[input_name]
-                            newLine = generate_include(newDir)
-                            newFileContent = replaceLinesWithWord(newLine, n , filePath)
-                            open(filePath , "w" , errors='ignore').close()
-                            with open(filePath , "a" , errors='ignore') as f:
-                                for line in newFileContent:
-                                    f.write(line)
+    includeDict : dict [str , str] = {}
+
+    for newfilePath in all_files:
+        fileName = os.path.basename(newfilePath)
+        oldpath = oldFilePaths[fileName].strip()
+        oldInclude = generate_include(oldpath)
+        newInclude = generate_include(newfilePath)
+        if oldInclude != "" and newInclude != "":
+            includeDict[oldInclude] = newInclude
+
+    for file_path in all_files:
+        with open(file_path , "r+" , errors='ignore') as f:
+            fileContent:str = f.read()
+            for oinc , ninc in includeDict.items():
+                fileContent.replace(oinc , ninc , 999)

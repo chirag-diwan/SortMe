@@ -19,10 +19,14 @@ if [ ! -d "$INSTALL_DIR" ]; then
     echo "[INFO] First-time setup..."
 
     mkdir -p "$INSTALL_DIR"
+    mkdir -p "$INSTALL_DIR/src"
+
     echo "[INFO] Made $INSTALL_DIR"
 
-    mv "$SCRIPT_NAME" "$INSTALL_DIR/"
-    mv *.py "$INSTALL_DIR/" 2>/dev/null
+    mv "$SCRIPT_NAME" "$INSTALL_DIR/src"
+    mv ../src "$INSTALL_DIR/" 2>/dev/null
+    mv ../data "$INSTALL_DIR/" 2>/dev/null
+
     
     echo "[INFO] Moved scripts to $INSTALL_DIR"
 
