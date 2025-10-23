@@ -7,21 +7,12 @@ import sys
 
 def getKey():
     KEY : str = ""
-    keyFilePath = os.path.join("../" , "data/APIKEY.txt")
+    try:
+        KEY = os.environ["OPENAI_API_KEY"]
+    except KeyError:
+        print("Enviroment Variable Not Set , Please Run The Installation Script Again")
 
-
-    if os.path.exists(keyFilePath):
-        with open(keyFilePath , "r") as f:
-            for line in f :
-                if (line != "" or " "):
-                    key=line
-    else:
-        if(len(sys.argv) == 1):
-            print("Please Provide a valid OpenAI AIP Key")
-            sys.exit()
-        KEY=sys.argv[1]
-        with open(keyFilePath , "w") as f:
-            f.write(KEY)
+    return KEY
 
 def getworkingDir():
     if(len(sys.argv) == 3):

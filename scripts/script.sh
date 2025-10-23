@@ -17,6 +17,10 @@ fi
 
 if [ ! -d "$INSTALL_DIR" ]; then
     echo "[INFO] First-time setup..."
+    echo "[READ] Enter your Open AI Api Key"
+    read K
+    echo "export OPENAI_API_KEY=$K" >> "$ENV_FILE"
+    source "$ENV_FILE"
 
     mkdir -p "$INSTALL_DIR"
     mkdir -p "$INSTALL_DIR/src"
