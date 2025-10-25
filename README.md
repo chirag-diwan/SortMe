@@ -1,3 +1,6 @@
+> [!WARNING]
+> This Project is under development AND HAS SOME BUGS , any damage created to your project is permanent and it cannot be reverted (as of now).
+
 # SortMe – Automatic Project Folder Organizer & Import Updater
 
 SortMe is a Python-based tool that intelligently organizes project folders and updates include/import statements for multiple programming languages. It makes your project structure logical, easy to navigate, and keeps dependencies correct after reorganizing files.
